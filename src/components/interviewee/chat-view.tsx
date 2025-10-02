@@ -41,7 +41,7 @@ export function ChatView({ candidate }: ChatViewProps) {
       const systemMessage: ChatMessage = {
         id: `msg-${Date.now()}`,
         role: 'assistant',
-        content: `Hello! I'm your AI interviewer. Before we start, I need to confirm a few details. What is your full name?`
+        content: `Hello! I am an AI interviewer from Swipe. Before we begin, I need to confirm a few details. What is your full name?\n\nHello! I am an AI interviewer from Swipe. Before we begin, I need to confirm a few details. What is your full name?`
       };
       dispatch({ type: 'ADD_CHAT_MESSAGE', payload: { id: candidate.id, message: systemMessage } });
     }
