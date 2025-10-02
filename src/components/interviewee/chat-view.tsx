@@ -135,7 +135,7 @@ export function ChatView({ candidate }: ChatViewProps) {
           <div key={message.id} className={`flex items-start gap-3 ${message.role === 'user' ? 'justify-end' : ''} animate-in fade-in-0 slide-in-from-bottom-4 duration-500`} style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'backwards' }}>
             {message.role !== 'user' && (
               <Avatar className="w-8 h-8">
-                <AvatarFallback className="bg-primary text-primary-foreground"><Icons.logo className="w-5 h-5" /></AvatarFallback>
+                <AvatarFallback className="bg-primary text-primary-foreground"><Icons.brain className="w-5 h-5" /></AvatarFallback>
               </Avatar>
             )}
             <div className={`rounded-lg px-4 py-2 max-w-[80%] whitespace-pre-wrap ${message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
@@ -152,7 +152,7 @@ export function ChatView({ candidate }: ChatViewProps) {
         {isGettingFeedback && (
           <div className="flex justify-start items-center gap-2 text-muted-foreground">
             <Avatar className="w-8 h-8">
-              <AvatarFallback className="bg-primary text-primary-foreground"><Icons.logo className="w-5 h-5" /></AvatarFallback>
+              <AvatarFallback className="bg-primary text-primary-foreground"><Icons.brain className="w-5 h-5" /></AvatarFallback>
             </Avatar>
             <div className="flex items-center gap-2">
               <Icons.spinner className="w-5 h-5 animate-spin" />
