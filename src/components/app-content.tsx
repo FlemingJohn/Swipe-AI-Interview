@@ -8,6 +8,7 @@ import { Icons } from '@/components/icons';
 import { IntervieweeView } from '@/components/interviewee/interviewee-view';
 import { InterviewerDashboard } from '@/components/interviewer/interviewer-dashboard';
 import { WelcomeBackModal } from '@/components/welcome-back-modal';
+import { ModeToggle } from './mode-toggle';
 
 export function AppContent() {
   const { state, dispatch } = useInterviewStore();
@@ -50,11 +51,14 @@ export function AppContent() {
 
   return (
     <main className="container mx-auto p-4 md:p-8">
-      <div className="flex items-center justify-center gap-4 mb-8">
-        <Icons.logo className="h-10 w-10 text-primary" />
-        <h1 className="text-3xl font-bold tracking-tight text-center font-headline">
-          Swipe AI Interview
-        </h1>
+      <div className="flex items-center justify-between gap-4 mb-8">
+        <div className="flex items-center gap-4">
+          <Icons.logo className="h-10 w-10 text-primary" />
+          <h1 className="text-3xl font-bold tracking-tight text-center font-headline">
+            Swipe AI Interview
+          </h1>
+        </div>
+        <ModeToggle />
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
