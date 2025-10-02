@@ -24,6 +24,7 @@ const getQuestionTime = (difficulty: 'Easy' | 'Medium' | 'Hard') => {
 export function ChatView({ candidate }: ChatViewProps) {
   const { dispatch, actions } = useInterviewStore();
   const [inputValue, setInputValue] = useState('');
+  const [isGettingFeedback, setIsGettingFeedback] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
   
   const { status, chatHistory, missingInfo, currentQuestionIndex, questions, questionStartTime } = candidate.interview;
@@ -66,8 +67,8 @@ export function ChatView({ candidate }: ChatViewProps) {
   }, [status, candidate.id, candidate.summary, actions]);
 
 
-  const handleSendMessage = (content: string) => {
-    if (!content.trim() && status !== 'collecting_info') return;
+  const handleSendMessage = async (content: string) => {
+    if ((!content.trim() && status !== 'collecting_info') || isGettingFeedback) return;
 
     const userMessage: ChatMessage = {
       id: `msg-${Date.now()}`,
@@ -80,7 +81,18 @@ export function ChatView({ candidate }: ChatViewProps) {
 
     if (status === 'collecting_info') {
         handleInfoCollection(content.trim());
-    } else if (status === 'in_progress') {
+    } else if (status === 'in_progress' && currentQuestion) {
+        setIsGettingFeedback(true);
+        const feedback = await actions.fetchAnswerFeedback(currentQuestion.question, content.trim());
+        if (feedback) {
+             const feedbackMessage: ChatMessage = {
+                id: `msg-feedback-${Date.now()}`,
+                role: 'assistant',
+                content: `**Feedback:** ${feedback.feedback}\n\n**Suggestion:** ${feedback.suggestion}`
+            };
+            dispatch({ type: 'ADD_CHAT_MESSAGE', payload: { id: candidate.id, message: feedbackMessage } });
+        }
+        setIsGettingFeedback(false);
         dispatch({ type: 'NEXT_QUESTION', payload: { id: candidate.id } });
     }
   };
@@ -124,7 +136,7 @@ export function ChatView({ candidate }: ChatViewProps) {
     }
   };
   
-  const isChatDisabled = status !== 'collecting_info' && status !== 'in_progress';
+  const isChatDisabled = status !== 'collecting_info' && status !== 'in_progress' || isGettingFeedback;
 
   return (
     <div className="flex flex-col h-[70vh] max-h-[70vh]">
@@ -137,7 +149,7 @@ export function ChatView({ candidate }: ChatViewProps) {
               </Avatar>
             )}
             <div className={`rounded-lg px-4 py-2 max-w-[80%] whitespace-pre-wrap ${message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-              <p className="text-sm">{message.content}</p>
+              <p className="text-sm" dangerouslySetInnerHTML={{ __html: message.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}></p>
             </div>
              {message.role === 'user' && (
               <Avatar className="w-8 h-8">
@@ -146,6 +158,18 @@ export function ChatView({ candidate }: ChatViewProps) {
             )}
           </div>
         ))}
+
+        {isGettingFeedback && (
+          <div className="flex justify-start items-center gap-2 text-muted-foreground">
+            <Avatar className="w-8 h-8">
+              <AvatarFallback className="bg-primary text-primary-foreground"><Icons.bot className="w-5 h-5" /></AvatarFallback>
+            </Avatar>
+            <div className="flex items-center gap-2">
+              <Icons.spinner className="w-5 h-5 animate-spin" />
+              <p>Thinking about your feedback...</p>
+            </div>
+          </div>
+        )}
 
         {status === 'generating_questions' && (
             <div className="flex justify-center items-center gap-2 text-muted-foreground">
@@ -157,7 +181,7 @@ export function ChatView({ candidate }: ChatViewProps) {
         {status === 'generating_summary' && (
             <div className="flex justify-center items-center gap-2 text-muted-foreground">
                 <Icons.spinner className="w-5 h-5 animate-spin" />
-                <p>Analyzing your answers and generating a summary...</p>
+                <p>Analyzing your answers and generating a final summary...</p>
             </div>
         )}
 
@@ -211,7 +235,7 @@ export function ChatView({ candidate }: ChatViewProps) {
                 />
             )}
             <Button size="icon" onClick={() => handleSendMessage(inputValue)} disabled={isChatDisabled}>
-              <Icons.send className="w-4 h-4" />
+              {isGettingFeedback ? <Icons.spinner className='animate-spin' /> : <Icons.send className="w-4 h-4" />}
             </Button>
           </div>
         </div>

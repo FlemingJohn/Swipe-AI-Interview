@@ -1,9 +1,10 @@
 "use client";
 
 import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
-import type { Candidate, InterviewSession, ChatMessage, InterviewQuestion, InterviewStatus, MissingInfo } from '@/lib/types';
+import type { Candidate, InterviewQuestion, InterviewStatus, MissingInfo, ChatMessage } from '@/lib/types';
 import { generateInterviewQuestions } from '@/ai/flows/generate-interview-questions';
 import { generateCandidateSummary } from '@/ai/flows/generate-candidate-summary';
+import { provideAnswerFeedback } from '@/ai/flows/provide-answer-feedback';
 
 const LOCAL_STORAGE_KEY = 'ai-interview-ace-state';
 
@@ -214,7 +215,6 @@ const interviewReducer = (state: AppState, action: Action): AppState => {
         return { ...state, activeInterviewId: action.payload.id };
 
     case 'DISMISS_RESUME_PROMPT': {
-        const { id } = action.payload;
         return { ...state, activeInterviewId: null };
     }
 
@@ -225,7 +225,7 @@ const interviewReducer = (state: AppState, action: Action): AppState => {
 
 const InterviewContext = createContext<{ state: AppState; dispatch: React.Dispatch<Action>, actions: any } | undefined>(undefined);
 
-export const InterviewProvider = ({ children }: { children: ReactNode }) => {
+export function InterviewProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(interviewReducer, initialState);
 
   useEffect(() => {
@@ -263,7 +263,6 @@ export const InterviewProvider = ({ children }: { children: ReactNode }) => {
       } catch (error) {
         console.error("Failed to generate questions", error);
         dispatch({ type: 'UPDATE_INTERVIEW_STATUS', payload: { id, status: 'ready_to_start' } });
-        // Optionally, dispatch an action to show an error toast
       }
     },
     fetchAndSetSummary: async (id: string) => {
@@ -278,8 +277,16 @@ export const InterviewProvider = ({ children }: { children: ReactNode }) => {
             dispatch({ type: 'SET_SUMMARY_AND_SCORE', payload: { id, summary, score } });
         } catch (error) {
             console.error("Failed to generate summary", error);
-            // Revert status to allow retry?
             dispatch({ type: 'UPDATE_INTERVIEW_STATUS', payload: { id, status: 'completed' } });
+        }
+    },
+    fetchAnswerFeedback: async (question: string, answer: string) => {
+        try {
+            const feedback = await provideAnswerFeedback({ question, answer });
+            return feedback;
+        } catch (error) {
+            console.error("Failed to generate feedback", error);
+            return null;
         }
     }
   };
