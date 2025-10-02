@@ -16,6 +16,55 @@ Swipe AI Interview is designed to streamline the initial screening process for t
 - **Generative AI**: [Firebase Genkit](https.firebase.google.com/docs/genkit)
 - **State Management**: React Context with `useReducer` (persisted to LocalStorage)
 
+## Getting Started
+
+Follow these instructions to set up and run the project on your local machine.
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/en) (version 18 or later recommended)
+- [npm](https://www.npmjs.com/) or a compatible package manager
+
+### 1. Install Dependencies
+
+First, install the necessary npm packages:
+
+```bash
+npm install
+```
+
+### 2. Set Up Environment Variables
+
+The project uses Genkit with Google AI, which requires a `GEMINI_API_KEY`. Create a `.env.local` file in the root of the project and add your API key:
+
+```
+GEMINI_API_KEY="YOUR_API_KEY_HERE"
+```
+
+You can obtain a Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+
+### 3. Run the Development Servers
+
+This project requires two processes to be run concurrently: the Next.js frontend and the Genkit AI flows.
+
+**Terminal 1: Run the Next.js App**
+
+```bash
+npm run dev
+```
+
+This will start the Next.js development server, typically at `http://localhost:9002`.
+
+**Terminal 2: Run the Genkit Flows**
+
+```bash
+npm run genkit:watch
+```
+
+This will start the Genkit development server and watch for any changes in your AI flow files.
+
+Once both servers are running, you can open your browser to `http://localhost:9002` to use the application.
+
 ## Features
 
 - **AI-Powered Interviews**: Candidates interact with an AI that asks questions and provides feedback.
