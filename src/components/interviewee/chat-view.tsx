@@ -9,6 +9,7 @@ import { Icons } from '@/components/icons';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Timer } from './timer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { InterviewLoadingAnimation } from './interview-loading-animation';
 
 interface ChatViewProps {
   candidate: Candidate;
@@ -141,8 +142,8 @@ export function ChatView({ candidate }: ChatViewProps) {
   return (
     <div className="flex flex-col h-[70vh] max-h-[70vh]">
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {chatHistory.map((message) => (
-          <div key={message.id} className={`flex items-start gap-3 ${message.role === 'user' ? 'justify-end' : ''}`}>
+        {chatHistory.map((message, index) => (
+          <div key={message.id} className={`flex items-start gap-3 ${message.role === 'user' ? 'justify-end' : ''} animate-in fade-in-0 slide-in-from-bottom-4 duration-500`} style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'backwards' }}>
             {message.role !== 'user' && (
               <Avatar className="w-8 h-8">
                 <AvatarFallback className="bg-primary text-primary-foreground"><Icons.bot className="w-5 h-5" /></AvatarFallback>
@@ -172,16 +173,14 @@ export function ChatView({ candidate }: ChatViewProps) {
         )}
 
         {status === 'generating_questions' && (
-            <div className="flex justify-center items-center gap-2 text-muted-foreground">
-                <Icons.spinner className="w-5 h-5 animate-spin" />
-                <p>Generating interview questions...</p>
-            </div>
+           <InterviewLoadingAnimation />
         )}
 
         {status === 'generating_summary' && (
-            <div className="flex justify-center items-center gap-2 text-muted-foreground">
-                <Icons.spinner className="w-5 h-5 animate-spin" />
-                <p>Analyzing your answers and generating a final summary...</p>
+            <div className="flex flex-col justify-center items-center gap-4 text-muted-foreground text-center">
+                <Icons.spinner className="w-8 h-8 animate-spin" />
+                <p className='font-semibold text-lg'>Hold on, we're almost there!</p>
+                <p className='text-sm'>Analyzing your answers and generating a final summary...</p>
             </div>
         )}
 

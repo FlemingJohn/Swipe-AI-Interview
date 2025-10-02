@@ -53,7 +53,7 @@ export function AppContent() {
       <div className="flex items-center justify-center gap-4 mb-8">
         <Icons.logo className="h-10 w-10 text-primary" />
         <h1 className="text-3xl font-bold tracking-tight text-center font-headline">
-          AI Interview Ace
+          Swipe AI Interview
         </h1>
       </div>
 

@@ -33,7 +33,7 @@ export function ResumeUploader({ onUpload }: ResumeUploaderProps) {
 
   return (
     <div className="flex flex-col items-center justify-center h-96">
-      <Card className="w-full max-w-lg text-center shadow-lg">
+      <Card className="w-full max-w-lg text-center">
         <CardHeader>
           <CardTitle className="text-2xl font-headline">Begin Your AI Interview</CardTitle>
           <CardDescription>Upload your resume to get started. We'll extract your details.</CardDescription>
