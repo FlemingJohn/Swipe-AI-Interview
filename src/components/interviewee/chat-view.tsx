@@ -72,7 +72,7 @@ export function ChatView({ candidate }: ChatViewProps) {
     if ((!content.trim() && status !== 'collecting_info') || isGettingFeedback) return;
 
     const userMessage: ChatMessage = {
-      id: `msg-${Date.now()}`,
+      id: `msg-user-${Date.now()}`,
       role: 'user',
       content: content.trim(),
       ...(currentQuestion && { questionNumber: currentQuestionIndex })
@@ -119,7 +119,7 @@ export function ChatView({ candidate }: ChatViewProps) {
 
     if(nextPrompt) {
         const assistantMessage: ChatMessage = {
-            id: `msg-${Date.now() + 1}`,
+            id: `msg-info-${Date.now()}`,
             role: 'assistant',
             content: nextPrompt
         };
