@@ -51,7 +51,7 @@ export function ChatView({ candidate }: ChatViewProps) {
         const lastMessage = chatHistory[chatHistory.length - 1];
         if (lastMessage?.role !== 'assistant' || !lastMessage.content.includes(currentQuestion.question)) {
              const questionMessage: ChatMessage = {
-                id: `msg-q-${currentQuestionIndex}`,
+                id: `msg-q-${currentQuestionIndex}-${Date.now()}`,
                 role: 'assistant',
                 content: `Question ${currentQuestionIndex + 1}/${questions.length} (${currentQuestion.difficulty}):\n\n${currentQuestion.question}`
              };
