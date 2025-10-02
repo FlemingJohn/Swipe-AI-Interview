@@ -153,6 +153,17 @@ const interviewReducer = (state: AppState, action: Action): AppState => {
         const { id, status, missingInfo } = action.payload;
         const candidate = state.candidates[id];
         if (!candidate) return state;
+        
+        let newChatHistory = candidate.interview.chatHistory;
+        if (status === 'collecting_info' && candidate.interview.chatHistory.length === 0) {
+            const systemMessage: ChatMessage = {
+                id: `msg-intro-${Date.now()}`,
+                role: 'assistant',
+                content: `Hello! I am an AI interviewer from Swipe. Before we begin, I need to confirm a few details. What is your full name?`
+            };
+            newChatHistory = [systemMessage];
+        }
+
         return {
             ...state,
             candidates: {
@@ -162,6 +173,7 @@ const interviewReducer = (state: AppState, action: Action): AppState => {
                     interview: { 
                         ...candidate.interview, 
                         status,
+                        chatHistory: newChatHistory,
                         ...(missingInfo !== undefined && { missingInfo }),
                     },
                 },

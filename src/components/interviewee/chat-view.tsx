@@ -37,17 +37,6 @@ export function ChatView({ candidate }: ChatViewProps) {
   }, [chatHistory]);
 
   useEffect(() => {
-    if (status === 'collecting_info' && chatHistory.length === 0) {
-      const systemMessage: ChatMessage = {
-        id: `msg-${Date.now()}`,
-        role: 'assistant',
-        content: `Hello! I am an AI interviewer from Swipe. Before we begin, I need to confirm a few details. What is your full name?`
-      };
-      dispatch({ type: 'ADD_CHAT_MESSAGE', payload: { id: candidate.id, message: systemMessage } });
-    }
-  }, [status, chatHistory.length, dispatch, candidate.id]);
-
-  useEffect(() => {
     if (status === 'in_progress' && currentQuestion) {
         const lastMessage = chatHistory[chatHistory.length - 1];
         if (lastMessage?.role !== 'assistant' || !lastMessage.content.includes(currentQuestion.question)) {
