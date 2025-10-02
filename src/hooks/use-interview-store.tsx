@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
@@ -58,14 +59,17 @@ const interviewReducer = (state: AppState, action: Action): AppState => {
           chatHistory: [],
           currentQuestionIndex: -1,
           questionStartTime: null,
-          missingInfo: 'name',
+          missingInfo: null,
         },
       };
-      return {
+      
+      const newState = {
         ...state,
         candidates: { ...state.candidates, [newId]: newCandidate },
         activeInterviewId: newId,
       };
+      
+      return interviewReducer(newState, { type: 'UPDATE_INTERVIEW_STATUS', payload: { id: newId, status: 'awaiting_resume', missingInfo: 'name' } });
     }
 
     case 'SET_ACTIVE_INTERVIEW':
@@ -155,7 +159,7 @@ const interviewReducer = (state: AppState, action: Action): AppState => {
         if (!candidate) return state;
         
         let newChatHistory = candidate.interview.chatHistory;
-        if (status === 'collecting_info' && candidate.interview.chatHistory.length === 0) {
+        if (status === 'collecting_info' && candidate.interview.status === 'awaiting_resume') {
             const systemMessage: ChatMessage = {
                 id: `msg-intro-${Date.now()}`,
                 role: 'assistant',
@@ -207,6 +211,9 @@ const interviewReducer = (state: AppState, action: Action): AppState => {
         ...candidate,
         score: null,
         summary: null,
+        name: '',
+        email: '',
+        phone: '',
         interview: {
           status: 'awaiting_resume',
           questions: [],
@@ -274,7 +281,7 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
         dispatch({ type: 'SET_QUESTIONS', payload: { id, questions } });
       } catch (error) {
         console.error("Failed to generate questions", error);
-        dispatch({ type: 'UPDATE_INTERVIEW_STATUS', payload: { id, status: 'ready_to_start' } });
+        dispatch({ type: 'UPDATE_INTERVIEW_STATUS', payload: { id, status: 'awaiting_guidelines' } });
       }
     },
     fetchAndSetSummary: async (id: string) => {
@@ -317,3 +324,5 @@ export const useInterviewStore = () => {
   }
   return context;
 };
+
+    

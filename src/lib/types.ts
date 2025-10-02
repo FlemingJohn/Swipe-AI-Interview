@@ -1,3 +1,4 @@
+
 export type InterviewQuestion = {
   question: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
@@ -13,6 +14,7 @@ export type ChatMessage = {
 export type InterviewStatus = 
   | 'awaiting_resume'
   | 'collecting_info'
+  | 'awaiting_guidelines'
   | 'ready_to_start'
   | 'generating_questions'
   | 'in_progress'
@@ -42,3 +44,5 @@ export type Candidate = {
   interview: InterviewSession;
   createdAt: number;
 };
+
+    

@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -103,7 +104,7 @@ export function ChatView({ candidate }: ChatViewProps) {
       dispatch({ type: 'UPDATE_CANDIDATE_INFO', payload: { id: candidate.id, phone: value } });
       nextMissingInfo = null;
       nextPrompt = "Perfect! All your details are saved. We're ready to begin the interview.";
-      dispatch({ type: 'UPDATE_INTERVIEW_STATUS', payload: { id: candidate.id, status: 'ready_to_start', missingInfo: null } });
+      dispatch({ type: 'UPDATE_INTERVIEW_STATUS', payload: { id: candidate.id, status: 'awaiting_guidelines', missingInfo: null } });
     }
 
     if(nextPrompt) {
@@ -231,3 +232,5 @@ export function ChatView({ candidate }: ChatViewProps) {
     </div>
   );
 }
+
+    
