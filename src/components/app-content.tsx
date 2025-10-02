@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -51,14 +52,16 @@ export function AppContent() {
 
   return (
     <main className="container mx-auto p-4 md:p-8">
-      <div className="flex items-center justify-between gap-4 mb-8">
-        <div className="flex items-center gap-4">
+      <div className="relative flex items-center justify-center mb-8">
+        <div className="flex items-center gap-4 absolute left-0">
           <Icons.logo className="h-10 w-10 text-primary" />
-          <h1 className="text-3xl font-bold tracking-tight text-center font-headline">
-            Swipe AI Interview
-          </h1>
         </div>
-        <ModeToggle />
+        <h1 className="text-3xl font-bold tracking-tight text-center font-headline">
+            Swipe AI Interview
+        </h1>
+        <div className="absolute right-0">
+            <ModeToggle />
+        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
