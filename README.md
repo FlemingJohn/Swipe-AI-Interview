@@ -1,5 +1,8 @@
 # Swipe AI Interview
 
+[**Live Demo**](https://swipe-ai-interview-nu.vercel.app/)
+[**Video Demo**](https://docs.google.com/videos/d/1CXdrlZeX5-0MVlUBO_KI7shcMGcmymervrPS2mSuK_8/edit?usp=sharing)
+
 This is a Next.js application that provides an AI-powered interview experience. It allows candidates to go through an automated interview process, receive real-time feedback, and get a performance summary at the end.
 
 ## Project Overview
